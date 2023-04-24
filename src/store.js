@@ -25,6 +25,9 @@ const notes = (state = [], action) => {
   if(action.type === 'DESTROY_NOTE'){
     return state.filter(note => note.id !== action.note.id);
   }
+  if(action.type === 'CREATE_NOTE'){
+    return [...state, action.note];
+  }
   return state;
 };
 export const fetchProducts = ()=> {
@@ -47,6 +50,14 @@ export const destroyNote = note => {
     dispatch({ type: 'DESTROY_NOTE', note });
   };
 };
+
+export const createNote = note => {
+  return async(dispatch) => {
+    const response = await axios.post('/api/notes', note);
+    dispatch({ type: 'CREATE_NOTE', note: response.data });
+  };
+};
+
 export const loginWithToken = ()=> {
   return async(dispatch)=> {
     const token = window.localStorage.getItem('token');

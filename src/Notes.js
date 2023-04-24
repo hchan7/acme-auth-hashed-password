@@ -1,17 +1,30 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { destroyNote } from './store';
+import { destroyNote, createNote } from './store';
 
 const Notes = () => {
   const { notes, auth } = useSelector(state => state); 
   const dispatch = useDispatch();
   const filteredNotes = notes.filter(note => note.userId === auth.id);
-  
+  const [content, setContent] = useState('');
+  console.log('auth: ',auth);
+
   const destroy = note => {
-    //note.userId = null;
     dispatch(destroyNote(note));
   };
   
+  const create = async(ev) =>{
+    ev.preventDefault();
+    try{
+      console.log('notes:',notes);
+      await dispatch(createNote({ content, userId: auth.id }));
+      console.log('notes:',notes);
+      setContent('');
+    }
+    catch(ex){
+      console.log(ex);
+    }
+  };
   return (
     <div>
       <ul>
@@ -27,6 +40,10 @@ const Notes = () => {
         )
       }
       </ul>
+      <form onSubmit={ create }>
+        <input value={ content } onChange={ ev => setContent(ev.target.value) } placeholder='note' />
+        <button>Create</button>
+      </form>
     </div>
     
     );

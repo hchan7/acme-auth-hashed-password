@@ -44,6 +44,15 @@ app.delete('/api/notes/:id', async(req, res, next) => {
   }
 });
 
+app.post('/api/notes', async(req, res, next) => {
+  try{
+    res.status(201).send(await Note.create(req.body));  
+  }
+  catch(ex){
+    next(ex);
+  }
+});
+
 app.use('/api/auth', require('./routes/auth'));
 
 app.use((err, req, res, next)=> {
