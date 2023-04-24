@@ -22,6 +22,9 @@ const notes = (state = [], action) => {
   if(action.type === 'SET_NOTES'){
     return action.notes;
   }
+  if(action.type === 'DESTROY_NOTE'){
+    return state.filter(note => note.id !== action.note.id);
+  }
   return state;
 };
 export const fetchProducts = ()=> {
@@ -37,6 +40,13 @@ export const fetchNotes = () => {
   };
 };
 
+//
+export const destroyNote = note => {
+  return async(dispatch) => {
+    await axios.delete(`/api/notes/${note.id}`);
+    dispatch({ type: 'DESTROY_NOTE', note });
+  };
+};
 export const loginWithToken = ()=> {
   return async(dispatch)=> {
     const token = window.localStorage.getItem('token');
